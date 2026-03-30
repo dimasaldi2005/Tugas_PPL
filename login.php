@@ -1,25 +1,44 @@
 <?php
+session_start();
 include 'koneksi.php';
 
 if (isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // ❌ SALAH: tidak cocok dengan password hash
-    $query = "SELECT * FROM users WHERE email='$email' AND password='$password'";
+    $query = "SELECT * FROM users WHERE email='$email'";
     $result = mysqli_query($conn, $query);
 
-    if (mysqli_num_rows($result) > 0) {
-        echo "Login berhasil";
+    $data = mysqli_fetch_assoc($result);
+
+    if ($data && password_verify($password, $data['password'])) {
+        $_SESSION['email'] = $email;
+        header("Location: dashboard.php");
     } else {
-        echo "Login gagal";
+        echo "<script>alert('Login gagal');</script>";
     }
 }
 ?>
 
-<h2>Login</h2>
-<form method="POST">
-    Email: <input type="email" name="email"><br><br>
-    Password: <input type="password" name="password"><br><br>
-    <button type="submit" name="login">Masuk</button>
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Fixed</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Login</h2>
+    <form method="POST">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit" name="login">Masuk</button>
+    </form>
+    <div class="link">
+        <a href="register.php">Belum punya akun? Daftar di sini</a>
+    </div>
+</div>
+
+</body>
+</html>
