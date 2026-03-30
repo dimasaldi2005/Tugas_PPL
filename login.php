@@ -5,7 +5,7 @@ include 'koneksi.php';
 if (isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
-
+    // update: perbaikan validasi login
     $query = "SELECT * FROM users WHERE email='$email'";
     $result = mysqli_query($conn, $query);
 
